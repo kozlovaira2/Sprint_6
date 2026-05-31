@@ -12,8 +12,11 @@
 - Firefox
 
 ## Установка и запуск  
-pip install -r requirements.txt  
-pytest tests/ -v --alluredir=allure_results  
+``` shell
+pip install -r requirements.txt
+``` shell
+pytest tests/ -v --alluredir=allure_results
+``` shell
 allure serve allure_results  
 
 ## Что проверяется  
