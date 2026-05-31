@@ -12,9 +12,18 @@
 - Firefox
 
 ## Установка и запуск  
-pip install -r requirements.txt  
-pytest tests/ -v --alluredir=allure_results  
-allure serve allure_results  
+1) Перед работой с репозиторием необходимо установить зависимости:
+``` shell
+pip3 install -r requirements.txt
+```
+2) Для запуска всех тестов из директории tests можно использовать:
+```shell
+pytest tests/ -v --alluredir=allure_results 
+```
+3) Посмотреть отчет Allure в веб версии по запущенным тестам:
+``` shell
+allure serve allure_results
+```
 
 ## Что проверяется  
 
