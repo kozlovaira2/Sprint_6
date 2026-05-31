@@ -26,7 +26,7 @@ class OrderPage(BasePage):
     
     # Локаторы модального окна
     CONFIRM_BUTTON = (By.XPATH, "//button[text()='Да']")
-    SUCCESS_MESSAGE = (By.XPATH, "//div[contains(@class, 'Order_Modal')]//div[contains(text(), 'заказ оформлен')]")
+    SUCCESS_MESSAGE = (By.XPATH, "//div[contains(@class, 'Order_Modal')]//div[contains(text(), 'Заказ оформлен')]")
     
     # Варианты срока аренды
     RENTAL_OPTIONS = {
