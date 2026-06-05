@@ -1,7 +1,7 @@
 import allure
 import pytest
 from pages.main_page import MainPage
-from selenium.webdriver.support.ui import WebDriverWait
+from data import TestData
 
 
 @allure.feature("FAQ")
@@ -14,11 +14,8 @@ class TestFAQ:
     def test_faq_answers(self, driver, question_index):
         main_page = MainPage(driver)
         
-        # Ждём загрузки страницы
-        WebDriverWait(driver, 10).until(
-            lambda d: d.execute_script("return document.readyState") == "complete"
-        )
-        
+        # Ожидаем загрузки страницы через метод BasePage
+        main_page.wait_for_page_load()
         main_page.accept_cookies()
         
         with allure.step(f"Кликнуть на вопрос {question_index + 1}"):
@@ -28,6 +25,6 @@ class TestFAQ:
             actual_answer = main_page.get_answer_text(question_index)
         
         with allure.step("Сравнить с ожидаемым текстом"):
-            expected_answer = main_page.EXPECTED_ANSWERS[question_index]
+            expected_answer = TestData.EXPECTED_ANSWERS[question_index]
             assert actual_answer == expected_answer, \
                 f"Ответ на вопрос {question_index + 1} не совпадает.\nОжидалось: {expected_answer}\nПолучено: {actual_answer}"
