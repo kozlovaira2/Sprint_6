@@ -31,4 +31,4 @@ class TestData:
     SCOOTER_URL = "https://qa-scooter.praktikum-services.ru"
     
     # Текст успешного заказа
-    SUCCESS_ORDER_TEXT = "заказ оформлен"
+    SUCCESS_ORDER_TEXT = "Заказ оформлен"

@@ -43,8 +43,5 @@ class TestRedirects:
             driver.switch_to.window(driver.window_handles[1])
         
         with allure.step("Проверить, что открылась страница Дзена"):
-            WebDriverWait(driver, 10).until(
-                lambda d: "dzen.ru" in d.current_url or "yandex.ru" in d.current_url
-            )
-            assert "dzen.ru" in driver.current_url or "yandex.ru" in driver.current_url, \
-                f"Не удалось перейти на Дзен. Текущий URL: {driver.current_url}"
+            about_page = AboutYandexPage(driver)
+            assert about_page.is_dzen_page_opened(), "Не удалось перейти на Дзен"
