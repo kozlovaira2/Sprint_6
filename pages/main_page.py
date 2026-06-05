@@ -2,7 +2,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from pages.base_page import BasePage
 import allure
-import time
 
 
 class MainPage(BasePage):
@@ -10,10 +9,10 @@ class MainPage(BasePage):
     
     # Локаторы
     COOKIE_BUTTON = (By.XPATH, "//button[text()='да все привыкли']")
-    ORDER_BUTTON_TOP = (By.XPATH, "//div[contains(@class, 'Header')]//button[text()='Заказать']")
-    ORDER_BUTTON_BOTTOM = (By.XPATH, "//div[contains(@class, 'Home')]//button[text()='Заказать']")
-    SCOOTER_LOGO = (By.XPATH, "//a[contains(@class, 'Header')]//img[@alt='Scooter']")
-    YANDEX_LOGO = (By.XPATH, "//a[contains(@class, 'Header')]//img[@alt='Yandex']")
+    ORDER_BUTTON_TOP = (By.XPATH, "//button[text()='Заказать']")  # Упрощённый локатор
+    ORDER_BUTTON_BOTTOM = (By.XPATH, "//div[contains(@class, 'Home_FinishButton')]//button[text()='Заказать']")  # Нижняя кнопка
+    SCOOTER_LOGO = (By.XPATH, "//a[contains(@class, 'Header_LogoScooter')]//img[@alt='Scooter']")
+    YANDEX_LOGO = (By.XPATH, "//a[contains(@class, 'Header_LogoYandex')]//img[@alt='Yandex']")
     
     # Вопросы в FAQ
     QUESTION_1 = (By.ID, "accordion__heading-0")
@@ -35,18 +34,6 @@ class MainPage(BasePage):
     ANSWER_7 = (By.ID, "accordion__panel-6")
     ANSWER_8 = (By.ID, "accordion__panel-7")
     
-    # Ожидаемые тексты ответов
-    EXPECTED_ANSWERS = [
-        "Сутки — 400 рублей. Оплата курьеру — наличными или картой.",
-        "Пока что у нас так: один заказ — один самокат. Если хотите покататься с друзьями, можете просто сделать несколько заказов — один за другим.",
-        "Допустим, вы оформляете заказ на 8 мая. Мы привозим самокат 8 мая в течение дня. Отсчёт времени аренды начинается с момента, когда вы оплатите заказ курьеру. Если мы привезли самокат 8 мая в 20:30, суточная аренда закончится 9 мая в 20:30.",
-        "Только начиная с завтрашнего дня. Но скоро станем расторопнее.",
-        "Пока что нет! Но если что-то срочное — всегда можно позвонить в поддержку по красивому номеру 1010.",
-        "Самокат приезжает к вам с полной зарядкой. Этого хватает на восемь суток — даже если будете кататься без передышек и во сне. Зарядка не понадобится.",
-        "Да, пока самокат не привезли. Штрафа не будет, объяснительной записки тоже не попросим. Все же свои.",
-        "Да, обязательно. Всем самокатов! И Москве, и Московской области."
-    ]
-    
     def __init__(self, driver):
         super().__init__(driver)
     
@@ -66,7 +53,9 @@ class MainPage(BasePage):
     def click_order_button(self, button_position="top"):
         """Нажать кнопку заказа"""
         if button_position == "top":
-            self.click_element(self.ORDER_BUTTON_TOP)
+            # Находим все кнопки "Заказать" и берём первую (верхнюю)
+            buttons = self.wait.until(EC.presence_of_all_elements_located(self.ORDER_BUTTON_TOP))
+            buttons[0].click()
         else:
             self.scroll_to_element(self.ORDER_BUTTON_BOTTOM)
             self.click_element(self.ORDER_BUTTON_BOTTOM)
@@ -81,7 +70,7 @@ class MainPage(BasePage):
         
         element = self.wait.until(EC.presence_of_element_located(questions[question_index]))
         self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", element)
-        time.sleep(0.5)
+        self.wait.until(EC.element_to_be_clickable(questions[question_index]))
         self.driver.execute_script("arguments[0].click();", element)
         
         answers = [
@@ -103,9 +92,11 @@ class MainPage(BasePage):
     @allure.step("Кликнуть на логотип Самоката")
     def click_scooter_logo(self):
         """Кликнуть на логотип Самоката"""
-        self.click_element(self.SCOOTER_LOGO)
+        logo = self.wait.until(EC.element_to_be_clickable(self.SCOOTER_LOGO))
+        logo.click()
     
     @allure.step("Кликнуть на логотип Яндекса")
     def click_yandex_logo(self):
         """Кликнуть на логотип Яндекса"""
-        self.click_element(self.YANDEX_LOGO)
+        logo = self.wait.until(EC.element_to_be_clickable(self.YANDEX_LOGO))
+        logo.click()
