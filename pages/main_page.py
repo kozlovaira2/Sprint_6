@@ -34,9 +34,6 @@ class MainPage(BasePage):
     ANSWER_7 = (By.ID, "accordion__panel-6")
     ANSWER_8 = (By.ID, "accordion__panel-7")
     
-    def __init__(self, driver):
-        super().__init__(driver)
-    
     @allure.step("Принять куки")
     def accept_cookies(self):
         """Принять куки с ожиданием"""

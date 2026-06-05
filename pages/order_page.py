@@ -42,9 +42,6 @@ class OrderPage(BasePage):
         "семеро суток": (By.XPATH, "//div[text()='семеро суток']")
     }
     
-    def __init__(self, driver):
-        super().__init__(driver)
-    
     @allure.step("Заполнить первую форму заказа")
     def fill_order_form_first(self, order_data):
         """Заполнить первую форму заказа"""
