@@ -1,6 +1,7 @@
 import pytest
 from selenium import webdriver
 import allure
+from utils.urls import Urls
 
 
 @pytest.fixture(params=["firefox"], scope="function")
@@ -17,12 +18,6 @@ def driver(request):
     else:
         raise ValueError(f"Неизвестный браузер: {browser_name}")
     
-    driver.get("https://qa-scooter.praktikum-services.ru")
+    driver.get(Urls.BASE_URL)
     yield driver
     driver.quit()
-
-
-@pytest.fixture
-def base_url():
-    """Базовый URL сервиса"""
-    return "https://qa-scooter.praktikum-services.ru"
