@@ -2,7 +2,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from pages.base_page import BasePage
 import allure
-import time
 
 
 class OrderPage(BasePage):
@@ -23,6 +22,10 @@ class OrderPage(BasePage):
     COLOR_GREY = (By.XPATH, "//label[text()='серая безысходность']")
     COMMENT_INPUT = (By.XPATH, "//input[@placeholder='Комментарий для курьера']")
     ORDER_BUTTON = (By.XPATH, "//div[contains(@class, 'Order_Buttons')]/button[text()='Заказать']")
+    
+    # Локаторы календаря
+    CALENDAR = (By.XPATH, "//div[contains(@class, 'react-datepicker')]")
+    CALENDAR_DAY = (By.XPATH, "//div[contains(@class, 'react-datepicker__day') and text()='{day}']")
     
     # Локаторы модального окна
     CONFIRM_BUTTON = (By.XPATH, "//button[text()='Да']")
@@ -49,7 +52,7 @@ class OrderPage(BasePage):
         self.send_keys(self.SURNAME_INPUT, order_data["surname"])
         self.send_keys(self.ADDRESS_INPUT, order_data["address"])
         self.send_keys(self.METRO_STATION, order_data["metro"])
-        time.sleep(0.5)
+        self.wait.until(EC.element_to_be_clickable((By.XPATH, f"//div[text()='{order_data['metro']}']")))
         self.click_element((By.XPATH, f"//div[text()='{order_data['metro']}']"))
         self.send_keys(self.PHONE_INPUT, order_data["phone"])
         self.click_element(self.NEXT_BUTTON)
@@ -60,27 +63,20 @@ class OrderPage(BasePage):
         # === ВЫБОР ДАТЫ ЧЕРЕЗ КАЛЕНДАРЬ ===
         date_field = self.find_element(self.DATE_INPUT)
         date_field.click()
-        time.sleep(0.5)
         
         # Получаем число из даты (25.12.2024 -> 25)
         day = order_data["date"].split('.')[0]
         
         # Ждём появления календаря
-        self.wait.until(
-            EC.presence_of_element_located((By.XPATH, "//div[contains(@class, 'react-datepicker')]"))
-        )
+        self.wait.until(EC.presence_of_element_located(self.CALENDAR))
         
         # Находим и кликаем на нужный день в календаре
-        day_element = self.wait.until(
-            EC.element_to_be_clickable((By.XPATH, f"//div[contains(@class, 'react-datepicker__day') and text()='{day}']"))
-        )
+        day_locator = (By.XPATH, f"//div[contains(@class, 'react-datepicker__day') and text()='{day}']")
+        day_element = self.wait.until(EC.element_to_be_clickable(day_locator))
         day_element.click()
-        print(f"  Выбрана дата: {order_data['date']}")
-        time.sleep(0.5)
         
         # === СРОК АРЕНДЫ ===
         self.click_element(self.RENTAL_PERIOD)
-        time.sleep(0.3)
         self.click_element(self.RENTAL_OPTIONS[order_data["rental_period"]])
         
         # === ЦВЕТ ===
@@ -99,7 +95,6 @@ class OrderPage(BasePage):
     @allure.step("Подтвердить заказ")
     def confirm_order(self):
         """Подтвердить заказ в модальном окне"""
-        time.sleep(0.5)
         self.click_element(self.CONFIRM_BUTTON)
     
     @allure.step("Проверить, что заказ успешно создан")
