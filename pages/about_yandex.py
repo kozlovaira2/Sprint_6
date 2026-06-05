@@ -1,4 +1,3 @@
-from selenium.webdriver.support import expected_conditions as EC
 from pages.base_page import BasePage
 import allure
 
@@ -12,5 +11,5 @@ class AboutYandexPage(BasePage):
     @allure.step("Проверить, что открылась страница Дзена")
     def is_dzen_page_opened(self):
         """Проверить, что открылась страница Дзена"""
-        self.wait.until(lambda d: "dzen.ru" in d.current_url or "yandex.ru" in d.current_url)
-        return "dzen.ru" in self.driver.current_url or "yandex.ru" in self.driver.current_url
+        self.wait_for_url_contains("dzen.ru")
+        return "dzen.ru" in self.get_current_url()

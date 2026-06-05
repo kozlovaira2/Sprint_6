@@ -43,3 +43,29 @@ class BasePage:
         """Проскроллить до элемента"""
         element = self.find_element(locator)
         self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", element)
+    
+    @allure.step("Дождаться загрузки страницы")
+    def wait_for_page_load(self):
+        """Дождаться полной загрузки страницы"""
+        self.wait.until(lambda d: d.execute_script("return document.readyState") == "complete")
+    
+    @allure.step("Дождаться URL")
+    def wait_for_url(self, expected_url):
+        """Дождаться нужного URL"""
+        self.wait.until(lambda d: d.current_url.rstrip('/') == expected_url.rstrip('/'))
+    
+    @allure.step("Получить текущий URL")
+    def get_current_url(self):
+        """Получить текущий URL"""
+        return self.driver.current_url.rstrip('/')
+    
+    @allure.step("Переключиться на новое окно")
+    def switch_to_new_window(self):
+        """Переключиться на новое окно"""
+        self.wait.until(lambda d: len(d.window_handles) > 1)
+        self.driver.switch_to.window(self.driver.window_handles[1])
+    
+    @allure.step("Проверить, что URL содержит текст")
+    def wait_for_url_contains(self, text):
+        """Дождаться, что URL содержит указанный текст"""
+        self.wait.until(lambda d: text in d.current_url)
